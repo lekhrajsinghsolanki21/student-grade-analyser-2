@@ -1,0 +1,5 @@
+{
+  "name": "Student Grade Analyser",
+  "description": "A comprehensive student grade analyzer that automates performance tracking, calculates subject averages, and identifies top performers with persistent local storage.",
+  "requestFramePermissions": []
+}
