@@ -135,15 +135,25 @@
                     // Simulate Python Pandas logic in JS
                     const { subjects, maxMarks } = state.config;
                     const students = state.students;
+                    const passThreshold = maxMarks * 0.40; // 40% of max marks
+
                     const results = students.map(s => {
-                        const marks = Object.values(s.marks).map(Number);
+                        // Extract marks based on configured subjects to ensure order
+                        const marks = subjects.map(sub => Number(s.marks[sub] || 0));
                         const total = marks.reduce((a,b) => a+b, 0);
                         const percentage = (total / (subjects.length * maxMarks)) * 100;
+                        
+                        // FAIL LOGIC: Fail if ANY subject is below 40% of maxMarks
+                        const hasFailedSubject = marks.some(m => m < passThreshold);
+                        
+                        // Fail if overall percentage < 40% OR has failed a subject
+                        const status = (percentage >= 40 && !hasFailedSubject) ? 'Pass' : 'Fail';
+
                         return {
                             ...s,
                             total,
                             percentage,
-                            status: percentage >= 40 ? 'Pass' : 'Fail'
+                            status
                         };
                     });
                     
